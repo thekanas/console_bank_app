@@ -1,0 +1,6 @@
+rootProject.name = 'console_bank_app'
+include 'database'
+include 'service'
+include 'web'
+
+

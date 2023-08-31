@@ -17,13 +17,12 @@ import static lombok.AccessLevel.PRIVATE;
 
 @NoArgsConstructor(access = PRIVATE)
 public class UserDao extends Dao<Long, User>{
-
-    private static final String SELECT_ALL = "SELECT user_id, fullname, passport_number FROM users";
+    private static final String SELECT_ALL = "SELECT user_id, full_name, passport_number FROM users";
     private static final String SELECT_BY_ID = SELECT_ALL + " WHERE user_id = ?";
-    private static final String INSERT = "INSERT INTO users (fullname, passport_number, password) VALUES(?,?,?)";
-    private static final String UPDATE = "UPDATE users SET fullname = ?, passport_number = ?, password = ? WHERE user_id = ?";
+    private static final String INSERT = "INSERT INTO users (full_name, passport_number, password) VALUES(?,?,?)";
+    private static final String UPDATE = "UPDATE users SET full_name = ?, passport_number = ?, password = ? WHERE user_id = ?";
     private static final String DELETE_BY_ID = "DELETE FROM users WHERE user_id =?";
-
+    private static final String SELECT_BY_PASSPORT_NUMBER = SELECT_ALL + " WHERE passport_number = ? and password = ?";
 
     private static final UserDao INSTANCE = new UserDao();
     public static UserDao getInstance() {
@@ -43,8 +42,8 @@ public class UserDao extends Dao<Long, User>{
             while (resultSet.next()) {
                 users.add(User.builder()
                         .id(resultSet.getLong("user_id"))
-                        .fullName(resultSet.getString("fullName"))
-                        .passportNumber(resultSet.getString("passportNumber"))
+                        .fullName(resultSet.getString("full_name"))
+                        .passportNumber(resultSet.getString("passport_number"))
                         .build());
             }
         } catch (SQLException e) {
@@ -63,8 +62,29 @@ public class UserDao extends Dao<Long, User>{
 
             return resultSet.next() ? Optional.of(User.builder()
                     .id(resultSet.getLong("user_id"))
-                    .fullName(resultSet.getString("fullName"))
-                    .passportNumber(resultSet.getString("passportNumber"))
+                    .fullName(resultSet.getString("full_name"))
+                    .passportNumber(resultSet.getString("passport_number"))
+                    .build())
+                    : Optional.empty();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return Optional.empty();
+        }
+    }
+
+    public Optional<User> findByPassportNumber(String passportNumber, String password) {
+        try (Connection connection = ConnectionPool.get();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BY_PASSPORT_NUMBER)) {
+
+            preparedStatement.setString(1, passportNumber);
+            preparedStatement.setString(2, password);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            return resultSet.next() ? Optional.of(User.builder()
+                    .id(resultSet.getLong("user_id"))
+                    .fullName(resultSet.getString("full_name"))
+                    .passportNumber(resultSet.getString("passport_number"))
                     .build())
                     : Optional.empty();
 

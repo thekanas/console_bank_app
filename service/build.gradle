@@ -7,7 +7,10 @@ version '1.0-SNAPSHOT'
 
 dependencies {
     implementation project(":database")
-    implementation 'org.projectlombok:lombok:1.18.22'
+
+    compileOnly 'org.projectlombok:lombok:1.18.28'
+    annotationProcessor 'org.projectlombok:lombok:1.18.28'
+
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 }

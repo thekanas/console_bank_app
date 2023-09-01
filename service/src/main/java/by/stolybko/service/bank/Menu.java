@@ -7,12 +7,9 @@ import java.util.Scanner;
 
 import static by.stolybko.service.validator.MenuInputValidator.validationMenuInput;
 
+@RequiredArgsConstructor
 public class Menu {
     private final BankManagement bankManagement;
-
-    public Menu(BankManagement bankManagement) {
-        this.bankManagement = bankManagement;
-    }
 
     public void start() {
         String passportNumber = "";

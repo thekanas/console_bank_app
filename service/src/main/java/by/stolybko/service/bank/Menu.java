@@ -1,13 +1,18 @@
-package by.stolybko.service;
+package by.stolybko.service.bank;
 
 import by.stolybko.database.entity.User;
+import lombok.RequiredArgsConstructor;
 
 import java.util.Scanner;
 
 import static by.stolybko.service.validator.MenuInputValidator.validationMenuInput;
 
 public class Menu {
-    private final BankManagement bankManagement = new BankManagement();
+    private final BankManagement bankManagement;
+
+    public Menu(BankManagement bankManagement) {
+        this.bankManagement = bankManagement;
+    }
 
     public void start() {
         String passportNumber = "";
@@ -49,7 +54,7 @@ public class Menu {
 
     private void startAccountMenu(User user) {
 
-        System.out.println("Hello, " + user.getFullName());
+        System.out.println("\nHello, " + user.getFullName());
         boolean exit = false;
         while (!exit) {
 

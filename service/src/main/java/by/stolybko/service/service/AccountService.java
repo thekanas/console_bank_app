@@ -1,14 +1,14 @@
-package by.stolybko.service;
+package by.stolybko.service.service;
 
 import by.stolybko.database.dao.AccountDao;
 import by.stolybko.database.dao.TransactionDao;
 import by.stolybko.database.entity.Account;
 import by.stolybko.database.entity.Bank;
-import by.stolybko.database.entity.Transaction;
 import by.stolybko.database.entity.User;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 public class AccountService {
 
@@ -27,19 +27,13 @@ public class AccountService {
     }
 
     public boolean withdraw(Account account, BigDecimal money) {
-        if(accountDao.findById(account.getId()).isEmpty()) {
+        if(!hasWithdraw(account,money)) {
             return false;
         }
         Account accountWithdraw = accountDao.findById(account.getId()).get();
-        if(accountWithdraw.getBalance().subtract(money).compareTo(BigDecimal.ZERO) < 0) {
-            return false;
-        }
-
         accountWithdraw.setBalance(accountWithdraw.getBalance().subtract(money));
         accountDao.update(accountWithdraw);
-        Transaction transactionWithdraw = Transaction.builder()
 
-                .build()
         return true;
     }
 
@@ -53,5 +47,17 @@ public class AccountService {
         accountDao.update(accountReplenishment);
 
         return true;
+    }
+
+    public Optional<Account> findByAccountNumber(String accountNumber) {
+        return accountDao.findByAccountNumber(accountNumber);
+    }
+
+    public boolean hasWithdraw(Account account, BigDecimal money) {
+        if (accountDao.findById(account.getId()).isEmpty()) {
+            return false;
+        }
+        Account accountWithdraw = accountDao.findById(account.getId()).get();
+        return accountWithdraw.getBalance().subtract(money).compareTo(BigDecimal.ZERO) >= 0;
     }
 }

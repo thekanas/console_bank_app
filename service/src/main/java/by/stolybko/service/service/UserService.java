@@ -1,4 +1,4 @@
-package by.stolybko.service;
+package by.stolybko.service.service;
 
 import by.stolybko.database.dao.UserDao;
 import by.stolybko.database.entity.User;

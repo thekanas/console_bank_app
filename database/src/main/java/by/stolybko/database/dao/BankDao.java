@@ -23,6 +23,7 @@ public class BankDao extends Dao<Integer, Bank> {
     private static final String INSERT = "INSERT INTO bank (name) VALUES(?)";
     private static final String UPDATE = "UPDATE bank SET name = ? WHERE bank_id = ?";
     private static final String DELETE_BY_ID = "DELETE FROM bank WHERE bank_id =?";
+    private static final String SELECT_BY_NAME = SELECT_ALL + " WHERE name =?";
 
     private static final BankDao INSTANCE = new BankDao();
     public static BankDao getInstance() {
@@ -124,6 +125,25 @@ public class BankDao extends Dao<Integer, Bank> {
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+    public Optional<Bank> findByName(String byName) {
+        try (Connection connection = ConnectionPool.get();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BY_NAME)) {
+
+            preparedStatement.setString(1, byName);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            return resultSet.next() ? Optional.of(Bank.builder()
+                    .id(resultSet.getInt("bank_id"))
+                    .name(resultSet.getString("name"))
+                    .build())
+                    : Optional.empty();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return Optional.empty();
         }
     }
 }

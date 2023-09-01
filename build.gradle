@@ -1,0 +1,10 @@
+subprojects  {
+    group 'by.stolybko'
+
+    repositories {
+        mavenCentral()
+    }
+
+}
+
+version '1.0-SNAPSHOT'

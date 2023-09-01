@@ -3,8 +3,10 @@ package by.stolybko.database.dao;
 import by.stolybko.database.connection.ConnectionPool;
 import by.stolybko.database.entity.Account;
 import by.stolybko.database.entity.Transaction;
+import by.stolybko.database.entity.enam.TransactionType;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,10 +21,10 @@ import static lombok.AccessLevel.PRIVATE;
 
 @NoArgsConstructor(access = PRIVATE)
 public class TransactionDao extends Dao<Long, Transaction> {
-    private static final String SELECT_ALL = "SELECT transaction_id, from_account_id, to_account_id, amount, created_at FROM transaction";
+    private static final String SELECT_ALL = "SELECT transaction_id, from_account_id, to_account_id, amount, transaction_type, created_at FROM transaction";
     private static final String SELECT_BY_ID = SELECT_ALL + " WHERE transaction_id = ?";
-    private static final String INSERT = "INSERT INTO transaction (from_account_id, to_account_id, amount, created_at) VALUES(?,?,?,?)";
-    private static final String UPDATE = "UPDATE transaction SET from_account_id = ?, to_account_id = ?, amount = ?, created_at = ? WHERE transaction_id = ?";
+    private static final String INSERT = "INSERT INTO transaction (from_account_id, to_account_id, amount, transaction_type, created_at) VALUES(?,?,?,?,?)";
+    private static final String UPDATE = "UPDATE transaction SET from_account_id = ?, to_account_id = ?, amount = ?, transaction_type = ?, created_at = ? WHERE transaction_id = ?";
     private static final String DELETE_BY_ID = "DELETE FROM transaction WHERE transaction_id =?";
 
     private static final TransactionDao INSTANCE = new TransactionDao();
@@ -47,6 +49,7 @@ public class TransactionDao extends Dao<Long, Transaction> {
                         .fromAccount(accountDao.findById(resultSet.getLong("from_account_id")).get())
                         .toAccount(accountDao.findById(resultSet.getLong("to_account_id")).get())
                         .amount(resultSet.getBigDecimal("amount"))
+                        .transactionType(TransactionType.valueOf(resultSet.getString("transaction_type")))
                         .timestamp(resultSet.getTimestamp("created_at").toLocalDateTime())
                         .build());
             }
@@ -69,6 +72,7 @@ public class TransactionDao extends Dao<Long, Transaction> {
                     .fromAccount(accountDao.findById(resultSet.getLong("from_account_id")).get())
                     .toAccount(accountDao.findById(resultSet.getLong("to_account_id")).get())
                     .amount(resultSet.getBigDecimal("amount"))
+                    .transactionType(TransactionType.valueOf(resultSet.getString("transaction_type")))
                     .timestamp(resultSet.getTimestamp("created_at").toLocalDateTime())
                     .build())
                     : Optional.empty();
@@ -87,7 +91,8 @@ public class TransactionDao extends Dao<Long, Transaction> {
             preparedStatement.setLong(1, entity.getFromAccount().getId());
             preparedStatement.setLong(2, entity.getToAccount().getId());
             preparedStatement.setBigDecimal(3, entity.getAmount());
-            preparedStatement.setTimestamp(4, Timestamp.valueOf(entity.getTimestamp()));
+            preparedStatement.setString(4, entity.getTransactionType().name());
+            preparedStatement.setTimestamp(5, Timestamp.valueOf(entity.getTimestamp()));
             preparedStatement.executeUpdate();
 
             ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
@@ -111,8 +116,9 @@ public class TransactionDao extends Dao<Long, Transaction> {
             preparedStatement.setLong(1, entity.getFromAccount().getId());
             preparedStatement.setLong(2, entity.getToAccount().getId());
             preparedStatement.setBigDecimal(3, entity.getAmount());
-            preparedStatement.setTimestamp(4, Timestamp.valueOf(entity.getTimestamp()));
-            preparedStatement.setLong(5, entity.getId());
+            preparedStatement.setString(4, entity.getTransactionType().name());
+            preparedStatement.setTimestamp(5, Timestamp.valueOf(entity.getTimestamp()));
+            preparedStatement.setLong(6, entity.getId());
             preparedStatement.executeUpdate();
 
             return Optional.of(entity);
@@ -130,6 +136,45 @@ public class TransactionDao extends Dao<Long, Transaction> {
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
             return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean transfer(Transaction transaction) {
+        try (Connection connection = ConnectionPool.get()) {
+
+            connection.setAutoCommit(false);
+
+            Optional<Account> accountWithdraw = accountDao.findById(transaction.getFromAccount().getId());
+            Optional<Account> accountReplenishment = accountDao.findById(transaction.getToAccount().getId());
+
+            if(accountWithdraw.isEmpty() && accountReplenishment.isEmpty()) {
+                connection.rollback();
+                return false;
+            }
+
+            accountWithdraw.get().setBalance(accountWithdraw.get().getBalance().subtract(transaction.getAmount()));
+
+            if(accountWithdraw.get().getBalance().compareTo(BigDecimal.ZERO) < 0) {
+                connection.rollback();
+                return false;
+            }
+
+            accountReplenishment.get().setBalance(accountReplenishment.get().getBalance().add(transaction.getAmount()));
+            accountDao.update(accountWithdraw.get());
+            accountDao.update(accountReplenishment.get());
+
+            Optional<Transaction> sawedTransaction = save(transaction);
+
+            if(sawedTransaction.isEmpty()) {
+                connection.rollback();
+                return false;
+            }
+
+            return true;
+
         } catch (SQLException e) {
             e.printStackTrace();
             return false;

@@ -24,6 +24,8 @@ public class AccountDao extends Dao<Long, Account> {
     private static final String INSERT = "INSERT INTO account (account_number, balance, owner_id, bank_id) VALUES(?,?,?,?)";
     private static final String UPDATE = "UPDATE account SET account_number = ?, balance = ?, owner_id = ?, bank_id = ? WHERE account_id = ?";
     private static final String DELETE_BY_ID = "DELETE FROM account WHERE account_id =?";
+    private static final String SELECT_BY_USER_AND_BANK_ID = SELECT_ALL + " WHERE owner_id = ? AND bank_id = ?";
+    private static final String SELECT_BY_NUMBER = SELECT_ALL + " WHERE account_number = ?";
 
     private static final AccountDao INSTANCE = new AccountDao();
     public static AccountDao getInstance() {
@@ -81,6 +83,31 @@ public class AccountDao extends Dao<Long, Account> {
         }
     }
 
+    public List<Account> findByUserIdAndBankId(Long userId, Integer bankId) {
+        List<Account> accounts = new ArrayList<>();
+        try (Connection connection = ConnectionPool.get();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BY_USER_AND_BANK_ID)) {
+
+            preparedStatement.setLong(1, userId);
+            preparedStatement.setInt(2, bankId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                accounts.add(Account.builder()
+                        .id(resultSet.getLong("account_id"))
+                        .accountNumber(resultSet.getString("account_number"))
+                        .balance(resultSet.getBigDecimal("balance"))
+                        .owner(userDao.findById(resultSet.getLong("owner_id")).get())
+                        .bank(bankDao.findById(resultSet.getInt("bank_id")).get())
+                        .build());
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return accounts;
+    }
+
     @Override
     public Optional<Account> save(Account entity) {
         try (Connection connection = ConnectionPool.get();
@@ -135,6 +162,28 @@ public class AccountDao extends Dao<Long, Account> {
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+    public Optional<Account> findByAccountNumber(String accountNumber) {
+        try (Connection connection = ConnectionPool.get();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BY_NUMBER)) {
+
+            preparedStatement.setString(1, accountNumber);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            return resultSet.next() ? Optional.of(Account.builder()
+                    .id(resultSet.getLong("account_id"))
+                    .accountNumber(resultSet.getString("account_number"))
+                    .balance(resultSet.getBigDecimal("balance"))
+                    .owner(userDao.findById(resultSet.getLong("owner_id")).get())
+                    .bank(bankDao.findById(resultSet.getInt("bank_id")).get())
+                    .build())
+                    : Optional.empty();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return Optional.empty();
         }
     }
 }

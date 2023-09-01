@@ -1,5 +1,5 @@
 db.user: postgres
-db.password: 090690
+db.password: postgres
 db.url: jdbc:postgresql://localhost:5432/console_bank
 db.driver: org.postgresql.Driver
 db.pool.size: 10

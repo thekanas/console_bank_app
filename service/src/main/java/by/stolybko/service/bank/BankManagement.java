@@ -1,6 +1,6 @@
 package by.stolybko.service.bank;
 
-import by.stolybko.database.dto.TransactionDTO;
+import by.stolybko.database.dto.TransactionCreateDTO;
 import by.stolybko.database.entity.Account;
 import by.stolybko.database.entity.Bank;
 import by.stolybko.database.entity.User;
@@ -65,7 +65,7 @@ public class BankManagement {
 
         switch (command) {
             case 1 -> {
-                if (transactionService.transfer(TransactionDTO.builder()
+                if (transactionService.transfer(TransactionCreateDTO.builder()
                         .fromAccount(accountFrom)
                         .toAccount(accountService.findByAccountNumber(accountToNumber).get())
                         .amount(moneyTransfer)
@@ -93,7 +93,7 @@ public class BankManagement {
 
         switch (command) {
             case 1 -> {
-                if (transactionService.withdraw(TransactionDTO.builder()
+                if (transactionService.withdraw(TransactionCreateDTO.builder()
                                 .fromAccount(account)
                                 .toAccount(account)
                                 .amount(moneyWithdraw)
@@ -121,7 +121,7 @@ public class BankManagement {
 
         switch (command) {
             case 1 -> {
-                if (transactionService.insert(TransactionDTO.builder()
+                if (transactionService.insert(TransactionCreateDTO.builder()
                         .fromAccount(account)
                         .toAccount(account)
                         .amount(moneyInsert)

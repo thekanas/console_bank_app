@@ -1,5 +1,6 @@
 package by.stolybko.database.entity;
 
+import by.stolybko.database.dto.UserShowDTO;
 import lombok.Builder;
 import lombok.Data;
 

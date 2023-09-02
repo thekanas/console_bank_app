@@ -6,6 +6,9 @@ import by.stolybko.database.entity.Transaction;
 import by.stolybko.database.entity.enam.TransactionType;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
+
+import static by.stolybko.service.service.ChequeService.chequeSave;
 
 public class TransactionService {
 
@@ -30,8 +33,13 @@ public class TransactionService {
                 .timestamp(LocalDateTime.now())
                 .build();
 
-        transactionDao.save(transaction);
-        return true;
+        Optional<Transaction> transactionSaved = transactionDao.save(transaction);
+        if(transactionSaved.isPresent()){
+            chequeSave(transactionSaved.get());
+            return true;
+        }
+        return false;
+
     }
 
     public boolean insert(TransactionDTO transactionDTO) {
@@ -47,8 +55,12 @@ public class TransactionService {
                 .timestamp(LocalDateTime.now())
                 .build();
 
-        transactionDao.save(transaction);
-        return true;
+        Optional<Transaction> transactionSaved = transactionDao.save(transaction);
+        if(transactionSaved.isPresent()){
+            chequeSave(transactionSaved.get());
+            return true;
+        }
+        return false;
     }
 
     public boolean transfer(TransactionDTO transactionDTO) {
@@ -61,7 +73,10 @@ public class TransactionService {
                 .timestamp(LocalDateTime.now())
                 .build();
 
-        return transactionDao.transfer(transaction);
-
+        if(transactionDao.transfer(transaction)){
+            chequeSave(transaction);
+            return true;
+        }
+        return false;
     }
 }

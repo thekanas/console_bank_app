@@ -7,6 +7,7 @@ import by.stolybko.database.entity.User;
 import by.stolybko.service.service.AccountService;
 import by.stolybko.service.service.TransactionService;
 import by.stolybko.service.service.UserService;
+import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -17,16 +18,13 @@ import java.util.Scanner;
 import static by.stolybko.service.validator.MenuInputValidator.validationMenuInput;
 import static by.stolybko.service.validator.MenuInputValidator.validationMoneyInput;
 
+@RequiredArgsConstructor
 public class BankManagement {
     private Scanner scanner = new Scanner(System.in);
     private final Bank bank;
     private final UserService userService = UserService.getInstance();
     private final AccountService accountService = AccountService.getInstance();
     private final TransactionService transactionService = TransactionService.getInstance();
-
-    public BankManagement(Bank bank) {
-        this.bank = bank;
-    }
 
     public Optional<User> loginAccount(String passportNumber, String password) {
         {

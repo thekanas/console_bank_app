@@ -2,7 +2,6 @@ package by.stolybko.database.dao;
 
 import by.stolybko.database.connection.ConnectionPool;
 import by.stolybko.database.entity.Account;
-import by.stolybko.database.entity.User;
 import lombok.NoArgsConstructor;
 
 import java.sql.Connection;
@@ -26,6 +25,7 @@ public class AccountDao extends Dao<Long, Account> {
     private static final String DELETE_BY_ID = "DELETE FROM account WHERE account_id =?";
     private static final String SELECT_BY_USER_AND_BANK_ID = SELECT_ALL + " WHERE owner_id = ? AND bank_id = ?";
     private static final String SELECT_BY_NUMBER = SELECT_ALL + " WHERE account_number = ?";
+    private static final String ACCRUE_INTEREST = "UPDATE account SET balance = balance + balance * ? /100";
 
     private static final AccountDao INSTANCE = new AccountDao();
     public static AccountDao getInstance() {
@@ -184,6 +184,21 @@ public class AccountDao extends Dao<Long, Account> {
         } catch (SQLException e) {
             e.printStackTrace();
             return Optional.empty();
+        }
+    }
+
+    public boolean accrueInterest(Double percent) {
+        try (Connection connection = ConnectionPool.get();
+             PreparedStatement preparedStatement = connection.prepareStatement(ACCRUE_INTEREST)) {
+
+            preparedStatement.setDouble(1, percent);
+            preparedStatement.executeUpdate();
+
+            return true;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         }
     }
 }

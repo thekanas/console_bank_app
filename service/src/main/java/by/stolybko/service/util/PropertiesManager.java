@@ -1,6 +1,7 @@
-package by.stolybko.database.util;
+package by.stolybko.service.util;
 
 import lombok.SneakyThrows;
+
 import java.io.InputStream;
 import java.util.Properties;
 
@@ -21,7 +22,7 @@ public class PropertiesManager {
 
     @SneakyThrows
     private static void loadProperties() {
-        try (InputStream inputStream = PropertiesManager.class.getClassLoader().getResourceAsStream("applicationDB.yml")) {
+        try (InputStream inputStream = by.stolybko.service.util.PropertiesManager.class.getClassLoader().getResourceAsStream("application.yml")) {
             PROPERTIES.load(inputStream);
         }
     }

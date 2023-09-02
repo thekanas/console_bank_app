@@ -60,4 +60,8 @@ public class AccountService {
         Account accountWithdraw = accountDao.findById(account.getId()).get();
         return accountWithdraw.getBalance().subtract(money).compareTo(BigDecimal.ZERO) >= 0;
     }
+
+    public boolean accrueInterest(Double percent) {
+        return accountDao.accrueInterest(percent);
+    }
 }

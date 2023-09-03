@@ -1,0 +1,11 @@
++--------------------------------------+
+|              Bank cheque             |
+| Cheque:               232471339945Wi |
+| 04-09-2023                  00:22:19 |
+| Transaction type:         Withdrawal |
+| Sender's bank:            CleverBank |
+| Recipient's bank:         CleverBank |
+| Sender's account:         12345F789A |
+| Recipient's account:      12345F789A |
+| Amount:                    50.00 BYN |
++--------------------------------------+

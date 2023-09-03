@@ -119,5 +119,5 @@ POST http://localhost:8080/api/transaction?id=1
 
 Database
 ---
-Таблицы в базе данных соответствуют 3 нормальной форме.  
+Схема базы данных:  
 ![shema-db](img/db.png)

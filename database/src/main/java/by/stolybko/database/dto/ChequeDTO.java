@@ -25,13 +25,12 @@ public class ChequeDTO {
         String patternInfoTwoColumn = "| %-20s%16s |\n";
         DateTimeFormatter date = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         DateTimeFormatter time = DateTimeFormatter.ofPattern("HH:mm:ss");
-        LocalDateTime now = LocalDateTime.now();
 
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(firstEndLine);
         stringBuilder.append("|              Bank cheque             |\n");
         stringBuilder.append( String.format(patternInfoTwoColumn, "Cheque:", getNumber()));
-        stringBuilder.append( String.format(patternInfoTwoColumn, date.format(now), time.format(now)));
+        stringBuilder.append( String.format(patternInfoTwoColumn, date.format(transaction.getTimestamp()), time.format(transaction.getTimestamp())));
         stringBuilder.append( String.format(patternInfoTwoColumn, "Transaction type:", transaction.getTransactionType().getName()));
         stringBuilder.append( String.format(patternInfoTwoColumn, "Sender's bank:", transaction.getFromAccount().getBank().getName()));
         stringBuilder.append( String.format(patternInfoTwoColumn, "Recipient's bank:", transaction.getToAccount().getBank().getName()));

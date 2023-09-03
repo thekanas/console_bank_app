@@ -157,8 +157,7 @@ public class AccountDao extends Dao<Long, Account> {
         try (Connection connection = ConnectionPool.get();
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE_BY_ID)) {
             preparedStatement.setLong(1, id);
-            preparedStatement.executeUpdate();
-            return true;
+            return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -192,9 +191,7 @@ public class AccountDao extends Dao<Long, Account> {
              PreparedStatement preparedStatement = connection.prepareStatement(ACCRUE_INTEREST)) {
 
             preparedStatement.setDouble(1, percent);
-            preparedStatement.executeUpdate();
-
-            return true;
+            return preparedStatement.executeUpdate() > 0;
 
         } catch (SQLException e) {
             e.printStackTrace();

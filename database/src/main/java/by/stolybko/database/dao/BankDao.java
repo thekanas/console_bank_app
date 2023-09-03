@@ -2,7 +2,6 @@ package by.stolybko.database.dao;
 
 import by.stolybko.database.connection.ConnectionPool;
 import by.stolybko.database.entity.Bank;
-import by.stolybko.database.entity.User;
 import lombok.NoArgsConstructor;
 
 import java.sql.Connection;
@@ -33,7 +32,6 @@ public class BankDao extends Dao<Integer, Bank> {
     @Override
     public List<Bank> findAll() {
         List<Bank> banks = new ArrayList<>();
-
 
         try(Connection connection = ConnectionPool.get();
             Statement statement = connection.createStatement()) {
@@ -102,11 +100,6 @@ public class BankDao extends Dao<Integer, Bank> {
             preparedStatement.setInt(2, entity.getId());
             preparedStatement.executeUpdate();
 
-            ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
-            if (generatedKeys.next()) {
-                entity.setId(generatedKeys.getInt("bank_id"));
-            }
-
             return Optional.of(entity);
 
         } catch (SQLException e) {
@@ -120,8 +113,7 @@ public class BankDao extends Dao<Integer, Bank> {
         try (Connection connection = ConnectionPool.get();
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE_BY_ID)) {
             preparedStatement.setInt(1, id);
-            preparedStatement.executeUpdate();
-            return true;
+            return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;

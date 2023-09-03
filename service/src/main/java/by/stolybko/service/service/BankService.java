@@ -4,10 +4,7 @@ import by.stolybko.database.dao.BankDao;
 import by.stolybko.database.dto.BankDTO;
 import by.stolybko.database.entity.Bank;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class BankService {
 

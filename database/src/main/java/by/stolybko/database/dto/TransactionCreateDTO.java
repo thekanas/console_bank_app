@@ -6,6 +6,9 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 
+/**
+ * Класс представляющий объект на основе которого создается объект транзакции через консольное приложение.
+ */
 @Data
 @Builder
 public class TransactionCreateDTO {

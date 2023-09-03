@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 import java.math.BigDecimal;
 
 /**
- * A class representing an account in the banking system.
+ * Класс представляющий счёт в банковской системе.
  */
 @Data
 @Builder

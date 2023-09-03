@@ -16,7 +16,7 @@ import java.util.Optional;
 import static lombok.AccessLevel.PRIVATE;
 
 /**
- * A class that provides access to bank data in the database.
+ * Класс предоставляющий доступ к данным банков в базе данных.
  */
 @NoArgsConstructor(access = PRIVATE)
 public class BankDao extends Dao<Integer, Bank> {

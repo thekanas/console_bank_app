@@ -83,7 +83,7 @@ public class AccountServlet extends HttpServlet {
                 String id = req.getParameter("id");
                 ObjectMapper objectMapper = new ObjectMapper();
                 AccountDTO accountDTO = objectMapper.readValue(req.getReader().lines().collect(Collectors.joining()), AccountDTO.class);
-                Account account;
+                AccountShowDTO account;
                 if (id == null) {
 
                     account = accountService.save(accountDTO);

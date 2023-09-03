@@ -16,7 +16,7 @@ import java.util.Optional;
 import static lombok.AccessLevel.PRIVATE;
 
 /**
- * A class that provides access to user data in the database.
+ * Класс предоставляющий доступ к данным клиентов в базе данных.
  */
 @NoArgsConstructor(access = PRIVATE)
 public class UserDao extends Dao<Long, User>{

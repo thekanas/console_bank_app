@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * A class representing a customer in the banking system.
+ * Класс представляющий клиента в банковской системе.
  */
 @Data
 @Builder

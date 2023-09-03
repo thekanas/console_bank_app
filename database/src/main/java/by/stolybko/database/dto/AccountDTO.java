@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
+/**
+ * Класс представляющий объект на основе которого создается объект счёта.
+ */
 @Data
 @Builder
 @AllArgsConstructor

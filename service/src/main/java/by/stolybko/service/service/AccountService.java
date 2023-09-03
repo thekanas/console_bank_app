@@ -114,20 +114,22 @@ public class AccountService {
     /**
      * метод для создания счёта
      */
-    public Account save(AccountDTO accountDTO) throws SQLException {
-
-        return accountDao.save(mapAccount(accountDTO)).get();
+    public AccountShowDTO save(AccountDTO accountDTO) throws SQLException {
+        Account accountSawed = accountDao.save(mapAccount(accountDTO)).get();
+        return mapAccountShowDTO(accountSawed);
     }
 
     /**
      * метод для обновления счёта
      */
-    public Account update(AccountDTO accountDTO, Long id) throws SQLException {
+    public AccountShowDTO update(AccountDTO accountDTO, Long id) throws SQLException {
 
         Account account = mapAccount(accountDTO);
         account.setId(id);
 
-        return accountDao.update(account).get();
+        Account accountSawed = accountDao.update(account).get();
+
+        return mapAccountShowDTO(accountSawed);
     }
 
     /**

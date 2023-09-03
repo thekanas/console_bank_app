@@ -1,14 +1,15 @@
 package by.stolybko.database.dto;
 
-import by.stolybko.database.entity.enam.TransactionType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
+/**
+ * Класс представляющий объект для вывода информации о транзакции.
+ */
 @Data
 @Builder
 @AllArgsConstructor

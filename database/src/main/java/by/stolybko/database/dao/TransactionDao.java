@@ -20,7 +20,7 @@ import java.util.Optional;
 import static lombok.AccessLevel.PRIVATE;
 
 /**
- * A class that provides access to transaction data in the database.
+ * Класс предоставляющий доступ к данным транзакций в базе данных.
  */
 @NoArgsConstructor(access = PRIVATE)
 public class TransactionDao extends Dao<Long, Transaction> {

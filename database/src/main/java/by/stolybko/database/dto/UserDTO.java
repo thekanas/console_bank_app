@@ -5,6 +5,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Класс представляющий объект на основе которого создается объект клиента.
+ */
 @Data
 @Builder
 @AllArgsConstructor

@@ -1,8 +1,6 @@
-DROP
-DATABASE IF EXISTS console_bank;
+DROP DATABASE IF EXISTS console_bank;
 
-CREATE
-DATABASE console_bank;
+CREATE DATABASE console_bank;
 
 CREATE TABLE users
 (

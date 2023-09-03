@@ -19,6 +19,9 @@ import java.util.Optional;
 
 import static lombok.AccessLevel.PRIVATE;
 
+/**
+ * Класс предоставляющий доступ к данным транзакций в базе данных.
+ */
 @NoArgsConstructor(access = PRIVATE)
 public class TransactionDao extends Dao<Long, Transaction> {
     private static final String SELECT_ALL = "SELECT transaction_id, from_account_id, to_account_id, amount, transaction_type, created_at FROM transaction";
@@ -134,8 +137,7 @@ public class TransactionDao extends Dao<Long, Transaction> {
         try (Connection connection = ConnectionPool.get();
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE_BY_ID)) {
             preparedStatement.setLong(1, id);
-            preparedStatement.executeUpdate();
-            return true;
+            return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -167,7 +169,7 @@ public class TransactionDao extends Dao<Long, Transaction> {
             accountDao.update(accountReplenishment.get());
 
             Optional<Transaction> sawedTransaction = save(transaction);
-
+            System.out.println();
             if(sawedTransaction.isEmpty()) {
                 connection.rollback();
                 return false;

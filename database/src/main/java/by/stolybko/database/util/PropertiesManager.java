@@ -4,6 +4,9 @@ import lombok.SneakyThrows;
 import java.io.InputStream;
 import java.util.Properties;
 
+/**
+ * класс для чтения параметров конфигурационного файла
+ */
 public class PropertiesManager {
     private static final Properties PROPERTIES = new Properties();
 

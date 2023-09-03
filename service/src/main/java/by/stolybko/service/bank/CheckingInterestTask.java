@@ -7,6 +7,9 @@ import java.time.LocalDate;
 
 import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
 
+/**
+ * класс для выполнения задачи начисления процентов на баланс счёта в конце месяца
+ */
 public class CheckingInterestTask implements Runnable {
     private final AccountService accountService = AccountService.getInstance();
 

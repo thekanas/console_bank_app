@@ -8,24 +8,29 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
+/**
+ * класс представляющий банковский чек, содержащий информацию о банковской транзакции.
+ */
 @Data
 @Builder
 public class ChequeDTO {
     private Transaction transaction;
 
+    /**
+     * метод формирует строковую версию банковского чека, содержащего информацию о банковской транзакции.
+     */
     @Override
     public String toString() {
         String firstEndLine = "+--------------------------------------+\n";
         String patternInfoTwoColumn = "| %-20s%16s |\n";
         DateTimeFormatter date = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         DateTimeFormatter time = DateTimeFormatter.ofPattern("HH:mm:ss");
-        LocalDateTime now = LocalDateTime.now();
 
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(firstEndLine);
         stringBuilder.append("|              Bank cheque             |\n");
         stringBuilder.append( String.format(patternInfoTwoColumn, "Cheque:", getNumber()));
-        stringBuilder.append( String.format(patternInfoTwoColumn, date.format(now), time.format(now)));
+        stringBuilder.append( String.format(patternInfoTwoColumn, date.format(transaction.getTimestamp()), time.format(transaction.getTimestamp())));
         stringBuilder.append( String.format(patternInfoTwoColumn, "Transaction type:", transaction.getTransactionType().getName()));
         stringBuilder.append( String.format(patternInfoTwoColumn, "Sender's bank:", transaction.getFromAccount().getBank().getName()));
         stringBuilder.append( String.format(patternInfoTwoColumn, "Recipient's bank:", transaction.getToAccount().getBank().getName()));
@@ -37,6 +42,9 @@ public class ChequeDTO {
         return stringBuilder.toString();
     }
 
+    /**
+     * метод формирует уникальный номер чека на основе текущей даты и типа транзакции.
+     */
     public String getNumber() {
         LocalDateTime localDateTime = transaction.getTimestamp();
         DateTimeFormatter uniqId = DateTimeFormatter.ofPattern("yyDDDA");

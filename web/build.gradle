@@ -7,10 +7,35 @@ version '1.0-SNAPSHOT'
 
 dependencies {
     implementation project(":service")
+    implementation project(":database")
+
+    compileOnly 'jakarta.servlet:jakarta.servlet-api:6.0.0'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.0'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.15.0'
+
+    compileOnly 'org.projectlombok:lombok:1.18.28'
+    annotationProcessor 'org.projectlombok:lombok:1.18.28'
+
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 }
 
+war {
+    archiveName "console_bank_app.war"
+}
+
+task deployTomcat(type: Copy) {
+    from(war.archiveFile.get())
+//    your path to apache-tomcat:
+    into("h:/java/apache-tomcat-10.1.13/webapps/")
+}
+deployTomcat.dependsOn war
+assemble.dependsOn deployTomcat
+
 test {
     useJUnitPlatform()
+}
+
+javadoc {
+    options.encoding = 'UTF-8'
 }

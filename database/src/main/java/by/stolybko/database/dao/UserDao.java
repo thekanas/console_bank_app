@@ -15,6 +15,9 @@ import java.util.Optional;
 
 import static lombok.AccessLevel.PRIVATE;
 
+/**
+ * Класс предоставляющий доступ к данным клиентов в базе данных.
+ */
 @NoArgsConstructor(access = PRIVATE)
 public class UserDao extends Dao<Long, User>{
     private static final String SELECT_ALL = "SELECT user_id, full_name, passport_number FROM users";
@@ -141,8 +144,7 @@ public class UserDao extends Dao<Long, User>{
         try (Connection connection = ConnectionPool.get();
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE_BY_ID)) {
             preparedStatement.setLong(1, id);
-            preparedStatement.executeUpdate();
-            return true;
+            return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;

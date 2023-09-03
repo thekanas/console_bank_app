@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'jacoco'
 }
 
 version '1.0-SNAPSHOT'
@@ -12,12 +13,22 @@ dependencies {
     testCompileOnly 'org.projectlombok:lombok:1.18.28'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.28'
 
-    implementation 'org.apache.tomcat:tomcat-jdbc:10.1.7'
+    implementation 'org.apache.tomcat:tomcat-jdbc:10.1.13'
 
+    testImplementation 'com.h2database:h2:2.2.220'
+    testImplementation 'org.assertj:assertj-core:3.24.2'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
 }
 
 test {
+    maxParallelForks 3
     useJUnitPlatform()
+}
+
+test.finalizedBy jacocoTestReport
+jacocoTestReport.dependsOn test
+
+javadoc {
+    options.encoding = 'UTF-8'
 }

@@ -5,6 +5,9 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Scanner;
 
+/**
+ * класс для валидации пользовательского ввода в консольном меню
+ */
 public class MenuInputValidator {
 
     public static int validationMenuInput() {

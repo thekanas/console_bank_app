@@ -2,11 +2,16 @@ package by.stolybko.database.entity;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
 
+/**
+ * Класс представляющий счёт в банковской системе.
+ */
 @Data
 @Builder
+@EqualsAndHashCode(of = "id")
 public class Account {
     private Long id;
     private String accountNumber;

@@ -1,6 +1,6 @@
 package by.stolybko.service.bank;
 
-import by.stolybko.database.dto.TransactionDTO;
+import by.stolybko.database.dto.TransactionCreateDTO;
 import by.stolybko.database.entity.Account;
 import by.stolybko.database.entity.Bank;
 import by.stolybko.database.entity.User;
@@ -18,6 +18,9 @@ import java.util.Scanner;
 import static by.stolybko.service.validator.MenuInputValidator.validationMenuInput;
 import static by.stolybko.service.validator.MenuInputValidator.validationMoneyInput;
 
+/**
+ * класс предоставляет методы для совершения основных операций консольного банковского приложения
+ */
 @RequiredArgsConstructor
 public class BankManagement {
     private Scanner scanner = new Scanner(System.in);
@@ -26,6 +29,13 @@ public class BankManagement {
     private final AccountService accountService = AccountService.getInstance();
     private final TransactionService transactionService = TransactionService.getInstance();
 
+    /**
+     * метод проверяет наличие клиента с указанными номером паспорта и паролем в базе данных
+     *
+     * @param passportNumber номер паспорта клиента
+     * @param password пароль клиента
+     * @return объект клиента банка
+     */
     public Optional<User> loginAccount(String passportNumber, String password) {
         {
             if (Objects.equals(passportNumber, "") || Objects.equals(password, "")) {
@@ -41,6 +51,11 @@ public class BankManagement {
         }
     }
 
+    /**
+     * метод предоставляет меню для совершения денежного перевода
+     *
+     * @param user объект клиента банка
+     */
     public void transferMoney(User user) {
         System.out.println("\nTransfer money");
         Account accountFrom = selectAccount(user);
@@ -65,7 +80,7 @@ public class BankManagement {
 
         switch (command) {
             case 1 -> {
-                if (transactionService.transfer(TransactionDTO.builder()
+                if (transactionService.transfer(TransactionCreateDTO.builder()
                         .fromAccount(accountFrom)
                         .toAccount(accountService.findByAccountNumber(accountToNumber).get())
                         .amount(moneyTransfer)
@@ -81,6 +96,11 @@ public class BankManagement {
         }
     }
 
+    /**
+     * метод предоставляет меню для совершения снятия наличных
+     *
+     * @param user объект клиента банка
+     */
     public void withdrawalMoney(User user) {
         System.out.println("\nWithdrawal money");
         Account account = selectAccount(user);
@@ -93,7 +113,7 @@ public class BankManagement {
 
         switch (command) {
             case 1 -> {
-                if (transactionService.withdraw(TransactionDTO.builder()
+                if (transactionService.withdraw(TransactionCreateDTO.builder()
                                 .fromAccount(account)
                                 .toAccount(account)
                                 .amount(moneyWithdraw)
@@ -109,6 +129,11 @@ public class BankManagement {
         }
     }
 
+    /**
+     * метод предоставляет меню для совершения пополнения счета
+     *
+     * @param user объект клиента банка
+     */
     public void accountReplenishment(User user) {
         System.out.println("\nAccountReplenishment");
         Account account = selectAccount(user);
@@ -121,7 +146,7 @@ public class BankManagement {
 
         switch (command) {
             case 1 -> {
-                if (transactionService.insert(TransactionDTO.builder()
+                if (transactionService.insert(TransactionCreateDTO.builder()
                         .fromAccount(account)
                         .toAccount(account)
                         .amount(moneyInsert)
@@ -137,6 +162,11 @@ public class BankManagement {
         }
     }
 
+    /**
+     * метод предоставляет меню для вывода информации об аккаунте в консоль
+     *
+     * @param user объект клиента банка
+     */
     public void viewAccountInformation(User user) {
         System.out.println("\nYour accounts:");
         for (Account account : accountService.getAccountByUserAndBank(user, bank)) {

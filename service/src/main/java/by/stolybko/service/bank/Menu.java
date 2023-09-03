@@ -7,6 +7,9 @@ import java.util.Scanner;
 
 import static by.stolybko.service.validator.MenuInputValidator.validationMenuInput;
 
+/**
+ * класс для вывода меню консоли
+ */
 @RequiredArgsConstructor
 public class Menu {
     private final BankManagement bankManagement;

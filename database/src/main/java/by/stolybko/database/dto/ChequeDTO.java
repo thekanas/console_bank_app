@@ -8,11 +8,17 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
+/**
+ * класс представляющий банковский чек, содержащий информацию о банковской транзакции.
+ */
 @Data
 @Builder
 public class ChequeDTO {
     private Transaction transaction;
 
+    /**
+     * метод формирует строковую версию банковского чека, содержащего информацию о банковской транзакции.
+     */
     @Override
     public String toString() {
         String firstEndLine = "+--------------------------------------+\n";
@@ -37,6 +43,9 @@ public class ChequeDTO {
         return stringBuilder.toString();
     }
 
+    /**
+     * метод формирует уникальный номер чека на основе текущей даты и типа транзакции.
+     */
     public String getNumber() {
         LocalDateTime localDateTime = transaction.getTimestamp();
         DateTimeFormatter uniqId = DateTimeFormatter.ofPattern("yyDDDA");

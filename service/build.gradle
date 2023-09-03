@@ -11,6 +11,9 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.28'
     annotationProcessor 'org.projectlombok:lombok:1.18.28'
 
+    testImplementation 'org.mockito:mockito-core:5.5.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.5.0'
+    testImplementation 'org.assertj:assertj-core:3.24.2'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 }
@@ -22,3 +25,7 @@ test {
 
 test.finalizedBy jacocoTestReport
 jacocoTestReport.dependsOn test
+
+javadoc {
+    options.encoding = 'UTF-8'
+}

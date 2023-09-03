@@ -121,3 +121,10 @@ Database
 ---
 Схема базы данных:  
 ![shema-db](img/db.png)
+
+Tests
+---
+![test-db](img/test_db.png)
+тестами покрыт только модуль Database, застрял на тестировании сервиса...
+
+

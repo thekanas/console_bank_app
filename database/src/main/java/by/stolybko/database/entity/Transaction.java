@@ -8,6 +8,9 @@ import lombok.EqualsAndHashCode;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+/**
+ * A class representing a transaction in the banking system.
+ */
 @Data
 @Builder
 @EqualsAndHashCode(of = "id")

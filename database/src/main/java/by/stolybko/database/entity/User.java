@@ -4,6 +4,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+/**
+ * A class representing a customer in the banking system.
+ */
 @Data
 @Builder
 @EqualsAndHashCode(of = "id")

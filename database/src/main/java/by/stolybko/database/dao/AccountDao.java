@@ -15,6 +15,9 @@ import java.util.Optional;
 
 import static lombok.AccessLevel.PRIVATE;
 
+/**
+ * A class that provides access to account data in the database.
+ */
 @NoArgsConstructor(access = PRIVATE)
 public class AccountDao extends Dao<Long, Account> {
 

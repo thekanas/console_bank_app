@@ -19,6 +19,9 @@ import java.util.Optional;
 
 import static lombok.AccessLevel.PRIVATE;
 
+/**
+ * A class that provides access to transaction data in the database.
+ */
 @NoArgsConstructor(access = PRIVATE)
 public class TransactionDao extends Dao<Long, Transaction> {
     private static final String SELECT_ALL = "SELECT transaction_id, from_account_id, to_account_id, amount, transaction_type, created_at FROM transaction";

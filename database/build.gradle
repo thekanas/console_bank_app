@@ -22,8 +22,13 @@ dependencies {
 }
 
 test {
+    maxParallelForks 3
     useJUnitPlatform()
 }
 
 test.finalizedBy jacocoTestReport
 jacocoTestReport.dependsOn test
+
+javadoc {
+    options.encoding = 'UTF-8'
+}

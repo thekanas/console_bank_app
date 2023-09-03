@@ -3,11 +3,8 @@ package by.stolybko.service.service;
 import by.stolybko.database.dao.AccountDao;
 import by.stolybko.database.dao.TransactionDao;
 import by.stolybko.database.dto.*;
-import by.stolybko.database.entity.Account;
 import by.stolybko.database.entity.Transaction;
 import by.stolybko.database.entity.enam.TransactionType;
-
-import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -17,6 +14,9 @@ import java.util.Optional;
 
 import static by.stolybko.service.service.ChequeService.chequeSave;
 
+/**
+ * сервисный класс транзакций банковской системы
+ */
 public class TransactionService {
 
     private final TransactionDao transactionDao = TransactionDao.getInstance();
@@ -28,6 +28,9 @@ public class TransactionService {
         return INSTANCE;
     }
 
+    /**
+     * метод создает транзакцию по списанию средств и обновляет информацию в зависимом аккаунте
+     */
     public boolean withdraw(TransactionCreateDTO transactionCreateDTO) {
         boolean valid = accountService.withdraw(transactionCreateDTO.getFromAccount(), transactionCreateDTO.getAmount());
         if(!valid) {
@@ -50,6 +53,9 @@ public class TransactionService {
 
     }
 
+    /**
+     * метод создает транзакцию по зачислению средств и обновляет информацию в зависимом аккаунте
+     */
     public boolean insert(TransactionCreateDTO transactionCreateDTO) {
         boolean valid = accountService.insert(transactionCreateDTO.getFromAccount(), transactionCreateDTO.getAmount());
         if(!valid) {
@@ -71,6 +77,10 @@ public class TransactionService {
         return false;
     }
 
+    /**
+     * метод создает транзакцию по переводу средств.
+     * изолированность транзакции гарантируется в модуле database в классе TransactionDao
+     */
     public boolean transfer(TransactionCreateDTO transactionCreateDTO) {
 
         Transaction transaction = Transaction.builder()
@@ -88,10 +98,16 @@ public class TransactionService {
         return false;
     }
 
+    /**
+     * метод возвращает представление транзакции по её идентификатору
+     */
     public TransactionShowDTO getTransactionById(Long id) {
         return mapTransactionShowDTO(transactionDao.findById(id).get());
     }
 
+    /**
+     * метод возвращает список представлений транзакций
+     */
     public List<TransactionShowDTO> getAll() {
         List<TransactionShowDTO> transactionShowDTOList = new ArrayList<>();
         for (Transaction transaction : transactionDao.findAll()) {
@@ -100,6 +116,9 @@ public class TransactionService {
         return transactionShowDTOList;
     }
 
+    /**
+     * метод делегирует создание транзакции соответствующим методам в соответствии с типом транзакции
+     */
     public boolean save(TransactionDTO transactionDTO) throws SQLException {
         TransactionCreateDTO transactionCreateDTO = TransactionCreateDTO.builder()
                 .fromAccount(accountDao.findById(transactionDTO.getFromAccountId()).orElseThrow(SQLException::new))
@@ -123,6 +142,9 @@ public class TransactionService {
 
     }
 
+    /**
+     * метод обновляет транзакцию
+     */
     public Transaction update(TransactionDTO transactionDTO, Long id) throws SQLException {
 
         Transaction transaction = mapTransaction(transactionDTO);
@@ -131,6 +153,9 @@ public class TransactionService {
         return transactionDao.update(transaction).get();
     }
 
+    /**
+     * метод удаляет транзакцию
+     */
     public boolean delete(Long id) {
         if(transactionDao.findById(id).isEmpty()){
             return false;

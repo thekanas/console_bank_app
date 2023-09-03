@@ -2,21 +2,29 @@ package by.stolybko.service.service;
 
 import by.stolybko.database.dto.ChequeDTO;
 import by.stolybko.database.entity.Transaction;
+import by.stolybko.service.util.PropertiesManager;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+/**
+ * сервисный класс для сохранения чеков банковских операций
+ */
 public class ChequeService {
 
+    /**
+     * метод сохраняет чек указанной транзакции в папку указанную в конфигурационном файле
+     * @param transaction транзакция для формирования чека
+     */
     public static void chequeSave(Transaction transaction) {
 
         ChequeDTO cheque = ChequeDTO.builder()
                 .transaction(transaction)
                 .build();
 
-        String dirPath = "check";
+        String dirPath = PropertiesManager.get("chequeFolder");
         File dir = new File(dirPath);
         if (!dir.exists()) {
             dir.mkdir();

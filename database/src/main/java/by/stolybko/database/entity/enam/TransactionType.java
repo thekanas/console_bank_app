@@ -1,5 +1,8 @@
 package by.stolybko.database.entity.enam;
 
+/**
+ * Enum representing the type of transaction in the banking system.
+ */
 public enum TransactionType {
     INSERT("Insert"),
     WITHDRAWAL("Withdrawal"),

@@ -16,6 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * сервисный класс счетов банковской системы
+ */
 public class AccountService {
 
     private final AccountDao accountDao = AccountDao.getInstance();
@@ -28,12 +31,17 @@ public class AccountService {
         return INSTANCE;
     }
 
-
+    /**
+     * метод возвращает список аккаунтов пользователя в указанном банке
+     */
     public List<Account> getAccountByUserAndBank(User user, Bank bank) {
         return accountDao.findByUserIdAndBankId(user.getId(), bank.getId());
 
     }
 
+    /**
+     * метод обновляет счёт клиента при снятии наличных
+     */
     public boolean withdraw(Account account, BigDecimal money) {
         if(!hasWithdraw(account,money)) {
             return false;
@@ -45,6 +53,9 @@ public class AccountService {
         return true;
     }
 
+    /**
+     * метод обновляет счёт клиента при пополнении средств
+     */
     public boolean insert(Account account, BigDecimal money) {
         if(accountDao.findById(account.getId()).isEmpty()) {
             return false;
@@ -57,10 +68,16 @@ public class AccountService {
         return true;
     }
 
+    /**
+     * метод возвращает обект счёта по номеру счета
+     */
     public Optional<Account> findByAccountNumber(String accountNumber) {
         return accountDao.findByAccountNumber(accountNumber);
     }
 
+    /**
+     * метод проверяет возможно ли списать средства со счёта
+     */
     public boolean hasWithdraw(Account account, BigDecimal money) {
         if (accountDao.findById(account.getId()).isEmpty()) {
             return false;
@@ -69,14 +86,23 @@ public class AccountService {
         return accountWithdraw.getBalance().subtract(money).compareTo(BigDecimal.ZERO) >= 0;
     }
 
+    /**
+     * метод начисляет указанный процент на все счета
+     */
     public boolean accrueInterest(Double percent) {
         return accountDao.accrueInterest(percent);
     }
 
+    /**
+     * метод возвращает представление счёта по его индетификатору
+     */
     public AccountShowDTO getAccountById(Long id) {
         return mapAccountShowDTO(accountDao.findById(id).get());
     }
 
+    /**
+     * метод возвращает все представления счётов
+     */
     public List<AccountShowDTO> getAll() {
         List<AccountShowDTO> accountShowDTOList = new ArrayList<>();
         for (Account account : accountDao.findAll()) {
@@ -85,11 +111,17 @@ public class AccountService {
         return accountShowDTOList;
     }
 
+    /**
+     * метод для создания счёта
+     */
     public Account save(AccountDTO accountDTO) throws SQLException {
 
         return accountDao.save(mapAccount(accountDTO)).get();
     }
 
+    /**
+     * метод для обновления счёта
+     */
     public Account update(AccountDTO accountDTO, Long id) throws SQLException {
 
         Account account = mapAccount(accountDTO);
@@ -98,6 +130,9 @@ public class AccountService {
         return accountDao.update(account).get();
     }
 
+    /**
+     * метод для удаления счёта
+     */
     public boolean delete(Long id) {
         if(accountDao.findById(id).isEmpty()){
             return false;

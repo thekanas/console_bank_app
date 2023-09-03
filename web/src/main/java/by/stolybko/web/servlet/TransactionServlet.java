@@ -1,9 +1,7 @@
 package by.stolybko.web.servlet;
 
-import by.stolybko.database.dto.TransactionCreateDTO;
 import by.stolybko.database.dto.TransactionDTO;
 import by.stolybko.database.dto.TransactionShowDTO;
-import by.stolybko.database.entity.Transaction;
 import by.stolybko.service.service.TransactionService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
@@ -16,12 +14,21 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * класс для предоставления CRUD операций в клиент-серверной модели для сущности Transaction
+ */
 @WebServlet("/api/transaction")
 public class TransactionServlet extends HttpServlet {
 
     private final TransactionService transactionService = TransactionService.getInstance();
 
-
+    /**
+     * метод предоставляет операцию READ
+     * Если запрос содержит параметр "id" - выводится сущность с указанным id
+     * Если запрос не содержит параметр "id" - выводятся все сущности
+     * В случае успеха операции возвращается ответ с status code "200"
+     * В случае ошибки операции возвращается ответ с status code "400"
+     */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
@@ -52,6 +59,14 @@ public class TransactionServlet extends HttpServlet {
         }
     }
 
+    /**
+     * метод предоставляет операции CREATE, UPDATE, DELETE
+     * Если запрос содержит параметр "delete" - удаляется сущность с id равным значению параметра
+     * Если запрос не содержит параметр "delete" но содержит параметр "id" - обновляется сущность с указанным id
+     * Если запрос не содержит параметр "delete" и "id" - создается новая сущность
+     * В случае успеха операции возвращается ответ с status code "200"
+     * В случае ошибки операции возвращается ответ с status code "400" или "404"
+     */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
